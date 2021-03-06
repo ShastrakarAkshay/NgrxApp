@@ -24,7 +24,7 @@ export class ProductService {
     }
 
     deleteProduct(index: number) {
-        this.products.splice(index);
+        this.products.splice(index, 1);
     }
 
 }

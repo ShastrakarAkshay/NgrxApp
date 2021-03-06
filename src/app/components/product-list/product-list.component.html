@@ -17,7 +17,7 @@
                 <th>Price</th>
             </thead>
             <tbody>
-                <tr *ngFor="let product of productList; let i = index" (click)="editProduct(product, i)">
+                <tr *ngFor="let product of ($productList | async); let i = index" (click)="editProduct(product, i)">
                     <td>{{i+1}}</td>
                     <td>{{product.name}}</td>
                     <td>{{product.price}}</td>

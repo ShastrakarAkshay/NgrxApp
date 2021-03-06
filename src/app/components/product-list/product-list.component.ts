@@ -10,19 +10,21 @@ import { Observable, of } from 'rxjs';
 import { AddProductAction, DeleteProductAction, UpdateProductAction } from 'src/app/store/product.action';
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss'],
+  selector: 'app-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.scss'],
 })
-export class ProductComponent implements OnInit {
+export class ProductListComponent implements OnInit {
   productForm: FormGroup;
   productList: Product[] = [];
+  $productList: Observable<Product[]> = of([]);
   isEdit: boolean = false;
   selectedIndex: number = -1;
 
   constructor(
     private _fromBuilder: FormBuilder,
-    private _productService: ProductService
+    private _productService: ProductService,
+    private _store: Store<AppState>
   ) {
     this.productForm = this._fromBuilder.group({
       name: ['', Validators.required],
@@ -31,9 +33,10 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._productService.getAllProducts().subscribe((res) => {
-      this.productList = res;
-    });
+    // this._productService.getAllProducts().subscribe((res) => {
+    //   this.productList = res;
+    // });
+    this.$productList = this._store.select(state => state.productList.products);
   }
 
   editProduct(product: IProduct, index: number) {
@@ -43,20 +46,23 @@ export class ProductComponent implements OnInit {
   }
 
   updateProduct() {
-    this._productService.updateProduct(
-      this.productForm.value,
-      this.selectedIndex
-    );
+    // this._productService.updateProduct(
+    //   this.productForm.value,
+    //   this.selectedIndex
+    // );
+    this._store.dispatch(new UpdateProductAction({product: this.productForm.value, index: this.selectedIndex}));
     this.reset();
   }
 
   addProduct() {
-    this._productService.addProduct(this.productForm.value);
+    // this._productService.addProduct(this.productForm.value);
+    this._store.dispatch(new AddProductAction(this.productForm.value));
     this.reset();
   }
 
   deleteProduct() {
-    this._productService.deleteProduct(this.selectedIndex);
+    // this._productService.deleteProduct(this.selectedIndex);
+    this._store.dispatch(new DeleteProductAction(this.selectedIndex));
     this.reset();
   }
 
