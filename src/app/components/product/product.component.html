@@ -1,7 +1,7 @@
 <div class="app-product">
     <form [formGroup]="productForm">
-        <input type="text" placeholder="Product Name" formControlName="name">
-        <input type="text" placeholder="Price" formControlName="price">
+        <input type="text" class="pl-2" placeholder="Product Name" formControlName="name" [ngClass]="{'isEdit': isEdit}">
+        <input type="text" class="pl-2" placeholder="Price" formControlName="price" [ngClass]="{'isEdit': isEdit}">
         <br>
         <button class="btn btn-primary" *ngIf="!isEdit" [disabled]="productForm.invalid" (click)="addProduct()">Add</button>
         <button class="btn btn-success" *ngIf="isEdit" [disabled]="productForm.invalid" (click)="updateProduct()">Update</button>
@@ -17,7 +17,7 @@
                 <th>Price</th>
             </thead>
             <tbody>
-                <tr *ngFor="let product of productList; let i = index" (click)="editProduct(product, i)">
+                <tr *ngFor="let product of ($productList | async); let i = index" (click)="editProduct(product, i)">
                     <td>{{i+1}}</td>
                     <td>{{product.name}}</td>
                     <td>{{product.price}}</td>
